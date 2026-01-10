@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholarship Matching DSS - Presentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.css">
+    <style>
+        .reveal h1 { font-size: 2.5em; color: #2c3e50; }
+        .reveal h2 { font-size: 2em; color: #3498db; }
+        .reveal h3 { font-size: 1.5em; color: #34495e; }
+        .reveal table { font-size: 0.7em; margin: 20px auto; }
+        .reveal th { background: #3498db; color: white; }
+        .reveal td { border: 1px solid #ddd; padding: 8px; }
+        .reveal ul { font-size: 0.9em; }
+        .reveal .highlight { color: #e74c3c; font-weight: bold; }
+        .reveal .success { color: #27ae60; font-weight: bold; }
+        .reveal .warning { color: #f39c12; font-weight: bold; }
+        .reveal pre { font-size: 0.6em; }
+        .reveal code { background: #ecf0f1; padding: 2px 5px; border-radius: 3px; }
+        .metric-card {
+            background: #ecf0f1;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            min-width: 200px;
+        }
+        .metric-value { font-size: 2em; color: #27ae60; font-weight: bold; }
+        .metric-label { font-size: 0.8em; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Title Slide -->
+            <section>
+                <h1>Scholarship Matching<br/>Decision Support System</h1>
+                <h3>A Student-Centric Approach to Scholarship Discovery</h3>
+                <p style="margin-top: 50px;">
+                    <strong>Umut Turklay</strong><br/>
+                    UE Course Project<br/>
+                    January 2026
+                </p>
+            </section>
+
+            <!-- Problem Statement -->
+            <section>
+                <h2>Problem Statement</h2>
+                <div style="text-align: left;">
+                    <h3>The Challenge</h3>
+                    <ul>
+                        <li><strong>Manual scholarship search is time-consuming</strong>: 15-20 minutes per search</li>
+                        <li><strong>Students miss opportunities</strong>: Only find 2-3 scholarships manually</li>
+                        <li><strong>Lack of transparency</strong>: No clear understanding of eligibility</li>
+                        <li><strong>Potential bias</strong>: Inconsistent criteria application</li>
+                    </ul>
+                    <h3 style="margin-top: 30px;">The Impact</h3>
+                    <ul>
+                        <li>Students overwhelmed by options</li>
+                        <li>Qualified candidates miss deadlines</li>
+                        <li>Wasted time on ineligible applications</li>
+                        <li>No systematic approach to matching</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Research Objectives -->
+            <section>
+                <h2>Research Objectives</h2>
+                <h3>Primary Goal</h3>
+                <p>Build a <span class="highlight">transparent, fair, and efficient</span> Decision Support System for scholarship matching</p>
+                <h3 style="margin-top: 30px;">Specific Objectives</h3>
+                <ol style="font-size: 0.9em;">
+                    <li><strong>Accurate Matches</strong>: Achieve ≥80% precision in recommendations</li>
+                    <li><strong>Clear Reasoning</strong>: Provide "Why Matched / Why Not" explanations</li>
+                    <li><strong>Fairness by Design</strong>: Detect and monitor demographic bias</li>
+                    <li><strong>Efficiency</strong>: Reduce search time by ≥50%</li>
+                    <li><strong>Always Fresh</strong>: Auto-updating scholarship listings</li>
+                </ol>
+            </section>
+
+            <!-- Literature Review -->
+            <section>
+                <h2>Literature Review</h2>
+                <h3>Academic Foundation</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Paper</th>
+                            <th>Key Contribution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Noviyanto (2023)</strong></td>
+                            <td>AHP for scholarship selection - transparent weight assignment</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bachtiar et al. (2021)</strong></td>
+                            <td>Comparison: AHP vs TOPSIS vs Deep Learning</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fajardo et al. (2024)</strong></td>
+                            <td>ML interpretability for scholarship grants</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rasooli et al. (2023)</strong></td>
+                            <td>Fairness in educational assessment</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ziegler et al. (2021)</strong></td>
+                            <td>Equity gaps measurement framework</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 30px;">
+                    <span class="success">✅ Start Simple</span>: Rule-based DSS (professor's guidance)<br/>
+                    <span style="color: #95a5a6;">⏳ Future</span>: ML-based ranker (decision trees, logistic regression)
+                </p>
+            </section>
+
+            <!-- System Architecture -->
+            <section>
+                <h2>System Architecture</h2>
+                <h3>Three-Tier Architecture</h3>
+                <pre style="font-size: 0.55em; text-align: left;"><code>
+┌─────────────────────────────────────────┐
+│   Presentation Layer                    │
+│   HTMX + Jinja2 + TailwindCSS          │
+└─────────────────────────────────────────┘
+              ↓
+┌─────────────────────────────────────────┐
+│   Application Layer                     │
+│   Flask Blueprints + Business Services  │
+│   - Match Blueprint                     │
+│   - Explain Blueprint                   │
+│   - Audit Blueprint                     │
+└─────────────────────────────────────────┘
+              ↓
+┌─────────────────────────────────────────┐
+│   Data Layer                            │
+│   Firebase Firestore (NoSQL)            │
+│   - 500 Students                        │
+│   - 10 Scholarships                     │
+└─────────────────────────────────────────┘
+                </code></pre>
+                <p style="font-size: 0.8em; margin-top: 20px;">
+                    <strong>Why This Stack?</strong><br/>
+                    <strong>HTMX</strong>: Dynamic updates without SPA complexity<br/>
+                    <strong>Flask</strong>: Lightweight, modular (blueprints)<br/>
+                    <strong>Firestore</strong>: Real-time, scalable NoSQL
+                </p>
+            </section>
+
+            <!-- Data Preprocessing -->
+            <section>
+                <h2>Data Preprocessing</h2>
+                <h3>Dataset</h3>
+                <ul style="font-size: 0.8em;">
+                    <li><strong>Source</strong>: Kaggle Student Success Dataset (5,416 students)</li>
+                    <li><strong>Processed</strong>: 500 students (stratified sample)</li>
+                    <li><strong>Scholarships</strong>: 10 diverse opportunities (manually created)</li>
+                </ul>
+                <h3 style="margin-top: 20px;">Key Preprocessing Steps</h3>
+                <table style="font-size: 0.6em;">
+                    <thead>
+                        <tr>
+                            <th>Step</th>
+                            <th>Method</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>GPA Normalization</strong></td>
+                            <td>Linear transformation (95-190 → 0-4.0)</td>
+                            <td>Mean: 2.46, Range: 0.17-3.92</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Missing Values</strong></td>
+                            <td>Analysis + validation</td>
+                            <td>0 missing values (100% complete)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Categorical Encoding</strong></td>
+                            <td>Gender: 0/1, Nationality: codes</td>
+                            <td>Consistent format</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Feature Engineering</strong></td>
+                            <td>Keyword extraction from courses</td>
+                            <td>Jaccard similarity matching</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stratified Sampling</strong></td>
+                            <td>Preserve demographics</td>
+                            <td>92.2% Female, 7.8% Male</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Matching Algorithm - Stage A -->
+            <section>
+                <h2>Matching Algorithm: Two-Stage Pipeline</h2>
+                <h3>Stage A: Rule-Based Filter</h3>
+                <p><strong>Purpose</strong>: Hard constraints (binary: pass/fail)</p>
+                <div style="text-align: left; font-size: 0.8em;">
+                    <h4>8 Eligibility Rules:</h4>
+                    <ol>
+                        <li>✓ <strong>GPA</strong>: <code>student.gpa >= scholarship.min_gpa</code></li>
+                        <li>✓ <strong>Course</strong>: <code>student.course IN eligible_courses</code></li>
+                        <li>✓ <strong>Nationality</strong>: <code>student.nationality IN eligible_nationalities</code></li>
+                        <li>✓ <strong>Deadline</strong>: <code>scholarship.deadline > today</code></li>
+                        <li>✓ <strong>Age</strong>: <code>student.age <= scholarship.age_max</code></li>
+                        <li>✓ <strong>International Status</strong>: Required international == student.is_international</li>
+                        <li>✓ <strong>Gender</strong>: Gender-specific scholarships (e.g., Women in STEM)</li>
+                        <li>✓ <strong>Citizenship</strong>: Local-only scholarships require domestic status</li>
+                    </ol>
+                </div>
+                <p style="margin-top: 20px;"><strong>Output</strong>: Eligible vs Ineligible scholarships</p>
+            </section>
+
+            <!-- Matching Algorithm - Stage B -->
+            <section>
+                <h2>Matching Algorithm: AHP Ranking</h2>
+                <h3>Stage B: Weighted Scoring</h3>
+                <p><strong>Purpose</strong>: Rank eligible scholarships by fit</p>
+                <table style="font-size: 0.65em;">
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                            <th>Weight</th>
+                            <th>Formula</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>GPA Buffer</strong></td>
+                            <td>25%</td>
+                            <td><code>(student.gpa - min_gpa) / 4.0</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Keyword Match</strong></td>
+                            <td>25%</td>
+                            <td>Jaccard similarity of keywords</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Competitiveness</strong></td>
+                            <td>20%</td>
+                            <td><code>1 - competitiveness</code> (easier to win)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Time to Deadline</strong></td>
+                            <td>15%</td>
+                            <td>Urgency (sooner = higher)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Document Burden</strong></td>
+                            <td>15%</td>
+                            <td><code>1 - (docs / max_docs)</code> (fewer = easier)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 20px;">
+                    <strong>Final Score</strong>: Weighted sum → Range: 0.0 - 1.0<br/>
+                    <em style="font-size: 0.8em;">Inspiration: Noviyanto (2023) - AHP methodology</em>
+                </p>
+            </section>
+
+            <!-- Explainability -->
+            <section>
+                <h2>Explainability Framework</h2>
+                <h3>"Why Matched / Why Not" Transparency</h3>
+                <div style="text-align: left; font-size: 0.7em;">
+                    <h4>For Matched Scholarships:</h4>
+                    <pre style="background: #ecf0f1; padding: 15px; border-radius: 5px;"><code>
+DAAD Master's Scholarship - Score: 0.87 (Rank #1)
+
+✓ GPA 3.6 meets minimum 3.0 (+0.6 buffer)
+✓ Computer Science major eligible
+✓ International student (required)
+✓ Age 22 within limit (max 35)
+✓ Deadline April 10, 2026 (78 days remaining)
+
+Score Breakdown:
+- GPA Buffer: 0.15  | Keyword Match: 0.20
+- Competitiveness: 0.16 | Deadline: 0.12
+- Doc Burden: 0.13
+
+Recommendation: Strong match - Apply by April 10
+                    </code></pre>
+                    <h4 style="margin-top: 20px;">For Rejected Scholarships:</h4>
+                    <pre style="background: #ecf0f1; padding: 15px; border-radius: 5px;"><code>
+✗ Citizenship required: You are international student
+✗ GPA 2.8 below minimum 3.2
+
+Recommendation: Consider improving GPA or citizenship
+                    </code></pre>
+                </div>
+            </section>
+
+            <!-- Fairness Auditing -->
+            <section>
+                <h2>Fairness Auditing</h2>
+                <h3>Demographic Bias Detection</h3>
+                <div style="text-align: left; font-size: 0.85em;">
+                    <h4>4 Groups Analyzed:</h4>
+                    <ol>
+                        <li>Gender (Male vs Female)</li>
+                        <li>Nationality (Domestic vs International)</li>
+                        <li>GPA Band (Low &lt;2.5 vs Mid 2.5-3.2 vs High &gt;3.2)</li>
+                        <li>Scholarship Holder Status (Has vs No scholarship)</li>
+                    </ol>
+                    <p style="margin-top: 20px;">
+                        <strong>Bias Threshold</strong>: <span class="highlight">15% gap triggers alert</span>
+                    </p>
+                    <h4 style="margin-top: 20px;">Methodology (Rasooli et al. 2023):</h4>
+                    <pre style="background: #ecf0f1; padding: 10px; border-radius: 5px; font-size: 0.8em;"><code>
+Match Rate = Total Matches / Number of Students
+Gap = Max(Match Rates) - Min(Match Rates)
+
+If Gap > 0.15 → BIAS ALERT 🚨
+                    </code></pre>
+                </div>
+            </section>
+
+            <!-- Fairness Results -->
+            <section>
+                <h2>Fairness Results</h2>
+                <h3>Bias Gaps Detected</h3>
+                <table style="font-size: 0.65em;">
+                    <thead>
+                        <tr>
+                            <th>Demographic</th>
+                            <th>Gap</th>
+                            <th>Severity</th>
+                            <th>Interpretation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Gender</strong></td>
+                            <td>78.9%</td>
+                            <td>🔴 High</td>
+                            <td>Females: 2.02 avg, Males: 1.23 avg</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nationality</strong></td>
+                            <td>157.4%</td>
+                            <td>🔴 High</td>
+                            <td>Domestic: 1.97 avg, International: 0.40 avg</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GPA</strong></td>
+                            <td>319.2%</td>
+                            <td>🟡 Medium</td>
+                            <td>High GPA: 3.54 avg, Low GPA: 0.84 avg</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="text-align: left; font-size: 0.75em; margin-top: 20px;">
+                    <h4>Root Causes:</h4>
+                    <ul>
+                        <li><strong>Gender</strong>: Females have higher avg GPA (2.46 vs 2.17)</li>
+                        <li><strong>Nationality</strong>: Only 5 international students (1%), most scholarships require citizenship</li>
+                        <li><strong>GPA</strong>: Expected for merit-based scholarships (acceptable bias)</li>
+                    </ul>
+                    <h4 style="margin-top: 15px;">Mitigation:</h4>
+                    <ul>
+                        <li>✅ Add more international scholarships</li>
+                        <li>✅ Add need-based (low GPA) scholarships</li>
+                        <li>✅ Monitor gender-specific scholarships</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Testing & Validation -->
+            <section>
+                <h2>Testing & Validation</h2>
+                <h3>Testing Strategy (pytest)</h3>
+                <p><strong>Total Tests</strong>: 53 unit tests</p>
+                <ul style="font-size: 0.85em;">
+                    <li>25 tests: Rule-based filtering</li>
+                    <li>18 tests: AHP scoring algorithm</li>
+                    <li>10 tests: Explanation generation</li>
+                </ul>
+                <p style="margin-top: 20px;"><span class="success">Status: ✅ Core business logic validated</span></p>
+            </section>
+
+            <!-- Validation Results -->
+            <section>
+                <h2>Validation Results</h2>
+                <h3>Match Quality (Target: ≥80%)</h3>
+                <p style="font-size: 0.8em;"><strong>Method</strong>: 10 diverse test profiles with manually verified ground truth</p>
+                <table style="font-size: 0.55em;">
+                    <thead>
+                        <tr>
+                            <th>Test Profile</th>
+                            <th>Predicted</th>
+                            <th>Expected</th>
+                            <th>Correct</th>
+                            <th>Precision</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>High GPA CS (3.8)</td>
+                            <td>8</td>
+                            <td>8</td>
+                            <td>8</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>Low GPA Business (2.2)</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>International STEM (3.5)</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>Female Engineering (3.2)</td>
+                            <td>6</td>
+                            <td>6</td>
+                            <td>6</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>Mid-GPA IT (2.9)</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">... (10 total profiles)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="margin-top: 30px;">
+                    <div class="metric-card">
+                        <div class="metric-value">86%</div>
+                        <div class="metric-label">Average Precision</div>
+                    </div>
+                    <p style="font-size: 0.8em; margin-top: 15px;">
+                        <span class="success">✅ EXCEEDS 80% TARGET</span><br/>
+                        <em>Formula: Precision = Correct Recommendations / Total Recommendations</em>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Results Summary -->
+            <section>
+                <h2>Results Summary</h2>
+                <h3>Achieved Metrics</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Target</th>
+                            <th>Achieved</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Match Quality</strong></td>
+                            <td>≥80% precision</td>
+                            <td>86%</td>
+                            <td class="success">✅ Exceeded</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Transparency</strong></td>
+                            <td>100% explanations</td>
+                            <td>100%</td>
+                            <td class="success">✅ Met</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Efficiency</strong></td>
+                            <td>≥50% time saved</td>
+                            <td>~99.7% (algorithmic)</td>
+                            <td class="success">✅ Exceeded</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Equity</strong></td>
+                            <td>&lt;15% bias gap</td>
+                            <td>Varies by group</td>
+                            <td class="warning">⚠️ Needs work</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3 style="margin-top: 30px;">Database Statistics</h3>
+                <ul style="font-size: 0.85em;">
+                    <li><strong>Students</strong>: 500 (stratified sample)</li>
+                    <li><strong>Scholarships</strong>: 10 diverse opportunities</li>
+                    <li><strong>Average Matches</strong>: 1.96 per student (19.6% match rate)</li>
+                </ul>
+            </section>
+
+            <!-- Key Contributions -->
+            <section>
+                <h2>Key Contributions</h2>
+                <div style="text-align: left;">
+                    <h3>1. Academic Rigor</h3>
+                    <ul>
+                        <li>✅ Literature-grounded design (5 papers)</li>
+                        <li>✅ AHP-based ranking (Noviyanto 2023)</li>
+                        <li>✅ Fairness framework (Rasooli 2023, Ziegler 2021)</li>
+                    </ul>
+                    <h3>2. Technical Implementation</h3>
+                    <ul>
+                        <li>✅ Two-stage pipeline (Filter → Rank)</li>
+                        <li>✅ 8 eligibility rules + 5 AHP factors</li>
+                        <li>✅ Full explainability (rule traces)</li>
+                        <li>✅ Demographic bias detection</li>
+                    </ul>
+                    <h3>3. Validation</h3>
+                    <ul>
+                        <li>✅ 86% precision (exceeds 80% target)</li>
+                        <li>✅ 53 pytest tests</li>
+                        <li>✅ Complete documentation</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Limitations -->
+            <section>
+                <h2>Limitations</h2>
+                <div style="text-align: left; font-size: 0.85em;">
+                    <h3>Current Limitations</h3>
+                    <ol>
+                        <li><strong>Small Dataset</strong>: 500 students, 10 scholarships (demo scale)</li>
+                        <li><strong>Manual Weights</strong>: AHP weights assigned by domain expert (not learned)</li>
+                        <li><strong>No User Feedback</strong>: Cannot adjust weights based on application success</li>
+                        <li><strong>Static Scholarships</strong>: No auto-updating from external sources</li>
+                        <li><strong>Bias Issues</strong>: Gender/nationality bias needs mitigation</li>
+                    </ol>
+                    <h3 style="margin-top: 20px;">Technical Limitations</h3>
+                    <ul>
+                        <li>No mobile app (web-only)</li>
+                        <li>No email notifications</li>
+                        <li>No document upload (Firebase Storage)</li>
+                        <li>No admin panel for scholarship CRUD</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Future Work -->
+            <section>
+                <h2>Future Work</h2>
+                <div style="text-align: left; font-size: 0.8em;">
+                    <h3>Short-Term (Post-MVP)</h3>
+                    <ol>
+                        <li><strong>ML-Based Ranker</strong>: Decision tree or logistic regression to learn weights</li>
+                        <li><strong>User Feedback Loop</strong>: "Was this helpful?" ratings to improve ranking</li>
+                        <li><strong>Larger Database</strong>: Expand to 50+ scholarships</li>
+                        <li><strong>Bias Mitigation</strong>: Add international and need-based scholarships</li>
+                    </ol>
+                    <h3 style="margin-top: 20px;">Long-Term</h3>
+                    <ol>
+                        <li><strong>Mobile App</strong>: Flutter/React Native with push notifications</li>
+                        <li><strong>Email Alerts</strong>: Notify students when new scholarships match profile</li>
+                        <li><strong>Document Upload</strong>: Store transcripts, CVs in Firebase Storage</li>
+                        <li><strong>Admin Panel</strong>: Scholarship CRUD, user management, analytics</li>
+                        <li><strong>Integration</strong>: Scrape scholarship websites for auto-updates</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Lessons Learned -->
+            <section>
+                <h2>Lessons Learned</h2>
+                <div style="text-align: left; font-size: 0.8em;">
+                    <h3>What Worked Well</h3>
+                    <ul>
+                        <li>✅ <strong>Start Simple</strong>: Rule-based approach was transparent and debuggable</li>
+                        <li>✅ <strong>HTMX</strong>: Dynamic updates without SPA complexity</li>
+                        <li>✅ <strong>Firestore</strong>: NoSQL flexibility for rapid prototyping</li>
+                        <li>✅ <strong>Two-Stage Pipeline</strong>: Clear separation (eligibility → ranking)</li>
+                    </ul>
+                    <h3 style="margin-top: 20px;">What Was Challenging</h3>
+                    <ul>
+                        <li>⚠️ <strong>Bias Detection</strong>: Difficult to distinguish acceptable vs problematic bias</li>
+                        <li>⚠️ <strong>Weight Assignment</strong>: No clear methodology for AHP weights</li>
+                        <li>⚠️ <strong>Small Dataset</strong>: Limited diversity in test data</li>
+                        <li>⚠️ <strong>Manual Scholarships</strong>: Creating realistic scholarship data time-consuming</li>
+                    </ul>
+                    <h3 style="margin-top: 20px;">Key Takeaway</h3>
+                    <p><strong>"Transparency is hard but essential"</strong> - Every design choice affects fairness</p>
+                </div>
+            </section>
+
+            <!-- Conclusion -->
+            <section>
+                <h2>Conclusion</h2>
+                <div style="text-align: left; font-size: 0.85em;">
+                    <h3>Summary</h3>
+                    <ul>
+                        <li>✅ Built functional DSS with 86% precision (exceeds 80% target)</li>
+                        <li>✅ Implemented full transparency ("Why Matched / Why Not")</li>
+                        <li>✅ Detected demographic bias (gender, nationality, GPA)</li>
+                        <li>✅ Validated with 53 pytest tests</li>
+                        <li>✅ Complete technical documentation + 6 diagrams</li>
+                    </ul>
+                    <h3 style="margin-top: 20px;">Impact</h3>
+                    <ul>
+                        <li>Students can find scholarships in <strong>3 seconds</strong> (vs 15-20 minutes manually)</li>
+                        <li>Transparent recommendations build trust</li>
+                        <li>Fairness auditing ensures equity monitoring</li>
+                        <li>Scalable foundation for ML-based enhancements</li>
+                    </ul>
+                    <h3 style="margin-top: 20px;">Final Thought</h3>
+                    <blockquote style="font-style: italic; border-left: 4px solid #3498db; padding-left: 15px;">
+                        "A good DSS doesn't just recommend - it explains, learns, and ensures fairness"
+                    </blockquote>
+                </div>
+            </section>
+
+            <!-- Thank You -->
+            <section>
+                <h1>Thank You!</h1>
+                <h3>Questions?</h3>
+                <p style="margin-top: 50px; font-size: 0.9em;">
+                    <strong>Contact</strong>: Umut Turklay<br/>
+                    <strong>Project Repository</strong>: <code>/Users/umutturklay/dev/UE/DSS</code><br/>
+                    <strong>Documentation</strong>: <code>/docs/TECHNICAL_DOCUMENTATION.md</code><br/>
+                    <strong>Demo</strong>: <a href="http://localhost:5002">http://localhost:5002</a>
+                </p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: true,
+            transition: 'slide',
+            width: 1200,
+            height: 700,
+            margin: 0.1,
+        });
+    </script>
+</body>
+</html>
