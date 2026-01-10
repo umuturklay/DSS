@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+
+{% block title %}Fairness Audit Dashboard - DSS{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">Fairness Audit Dashboard</h2>
+        <p class="text-gray-600">
+            Demographic analysis and bias detection across {{ total_students }} students and {{ total_scholarships }} scholarships.
+        </p>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-6 text-white">
+            <div class="text-4xl font-bold mb-2">{{ total_students }}</div>
+            <div class="text-blue-100">Students Analyzed</div>
+        </div>
+        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md p-6 text-white">
+            <div class="text-4xl font-bold mb-2">{{ total_scholarships }}</div>
+            <div class="text-green-100">Scholarships</div>
+        </div>
+        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md p-6 text-white">
+            <div class="text-4xl font-bold mb-2">{{ diversity_metrics.total_unique_students }}</div>
+            <div class="text-purple-100">Students Matched</div>
+        </div>
+        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-md p-6 text-white">
+            <div class="text-4xl font-bold mb-2">{{ "%.2f"|format(diversity_metrics.avg_students_per_scholarship) }}</div>
+            <div class="text-orange-100">Avg Match/Scholarship</div>
+        </div>
+    </div>
+
+    <!-- Bias Alerts -->
+    {% if bias_detected %}
+    <div class="bg-red-50 border-2 border-red-400 rounded-lg p-6 mb-6">
+        <div class="flex items-center mb-4">
+            <svg class="w-8 h-8 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <h3 class="text-2xl font-bold text-red-800">⚠️ {{ bias_alerts|length }} Bias Alert(s) Detected</h3>
+        </div>
+
+        <div class="space-y-3">
+            {% for alert in bias_alerts %}
+            <div class="bg-white border border-red-300 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-lg font-semibold text-gray-800">{{ alert.group_type.replace('_', ' ').title() }}</span>
+                    <span class="px-3 py-1 rounded-full text-sm font-bold
+                        {% if alert.severity == 'high' %}bg-red-200 text-red-800{% else %}bg-yellow-200 text-yellow-800{% endif %}">
+                        {{ alert.severity.upper() }} SEVERITY
+                    </span>
+                </div>
+                <div class="text-red-700 mb-2">Gap: {{ "%.2f"|format(alert.gap) }} matches/student (Threshold: {{ "%.2f"|format(threshold) }})</div>
+                <div class="text-sm text-gray-600 space-y-1">
+                    {% for group_value, data in alert.details.items() %}
+                    <div class="flex justify-between">
+                        <span>{{ group_value }}:</span>
+                        <span class="font-semibold">{{ "%.2f"|format(data.match_rate) }} avg matches/student ({{ data.count }} students, {{ data.total_matches }} total matches)</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-green-50 border-2 border-green-400 rounded-lg p-6 mb-6">
+        <div class="flex items-center">
+            <svg class="w-8 h-8 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <div>
+                <h3 class="text-2xl font-bold text-green-800">✅ No Significant Bias Detected</h3>
+                <p class="text-green-700 mt-1">All demographic groups show match rates within {{ "%.2f"|format(threshold) }} matches/student threshold.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Diversity Score -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 class="text-xl font-semibold mb-4 text-gray-800">Diversity Metrics</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="border border-gray-200 rounded-lg p-4">
+                <div class="text-3xl font-bold text-blue-600">{{ diversity_metrics.diversity_score }}</div>
+                <div class="text-sm text-gray-600 mt-1">Diversity Score (0-1)</div>
+                <div class="text-xs text-gray-500 mt-2">{{ diversity_metrics.interpretation }}</div>
+            </div>
+            <div class="border border-gray-200 rounded-lg p-4">
+                <div class="text-3xl font-bold text-purple-600">{{ diversity_metrics.total_unique_students }}</div>
+                <div class="text-sm text-gray-600 mt-1">Unique Students Matched</div>
+            </div>
+            <div class="border border-gray-200 rounded-lg p-4">
+                <div class="text-3xl font-bold text-green-600">{{ "%.2f"|format(diversity_metrics.avg_students_per_scholarship) }}</div>
+                <div class="text-sm text-gray-600 mt-1">Avg Students per Scholarship</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demographic Analysis Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- Gender Distribution -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h4 class="text-lg font-semibold mb-4 text-gray-800">Gender Distribution</h4>
+            <canvas id="genderChart" height="250"></canvas>
+            <div class="mt-4 text-sm text-gray-600 space-y-1">
+                {% for gender, data in audit_results.demographic_analysis.gender.items() %}
+                <div class="flex justify-between">
+                    <span>{{ 'Female' if gender == '0' else 'Male' }}:</span>
+                    <span class="font-semibold">{{ data.count }} students ({{ "%.2f"|format(data.match_rate) }} avg matches/student)</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- International vs Domestic -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h4 class="text-lg font-semibold mb-4 text-gray-800">International vs Domestic</h4>
+            <canvas id="internationalChart" height="250"></canvas>
+            <div class="mt-4 text-sm text-gray-600 space-y-1">
+                {% for status, data in audit_results.demographic_analysis.is_international.items() %}
+                <div class="flex justify-between">
+                    <span>{{ 'International' if status == 'True' else 'Domestic' }}:</span>
+                    <span class="font-semibold">{{ data.count }} students ({{ "%.2f"|format(data.match_rate) }} avg matches/student)</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- GPA Bands -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h4 class="text-lg font-semibold mb-4 text-gray-800">Match Rates by GPA Band</h4>
+            <canvas id="gpaChart" height="250"></canvas>
+        </div>
+
+        <!-- Scholarship Holders -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h4 class="text-lg font-semibold mb-4 text-gray-800">Current Scholarship Holders</h4>
+            <canvas id="scholarshipHolderChart" height="250"></canvas>
+        </div>
+    </div>
+
+    <!-- Methodology -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <h4 class="font-semibold text-blue-900 mb-3">Fairness Audit Methodology</h4>
+        <div class="space-y-2 text-sm text-blue-800">
+            <div class="flex items-start">
+                <span class="font-bold mr-2">1.</span>
+                <span><strong>Demographic Segmentation:</strong> Students grouped by gender, nationality, GPA band, and current scholarship status</span>
+            </div>
+            <div class="flex items-start">
+                <span class="font-bold mr-2">2.</span>
+                <span><strong>Match Rate Calculation:</strong> For each group, we calculate average scholarships matched per student</span>
+            </div>
+            <div class="flex items-start">
+                <span class="font-bold mr-2">3.</span>
+                <span><strong>Bias Detection:</strong> If max match rate - min match rate > {{ "%.2f"|format(threshold) }} matches/student, a bias alert is triggered</span>
+            </div>
+            <div class="flex items-start">
+                <span class="font-bold mr-2">4.</span>
+                <span><strong>Diversity Score:</strong> Measures concentration of matches (1 = perfect diversity, 0 = all matches to one group)</span>
+            </div>
+        </div>
+        <div class="mt-4 text-xs text-blue-700">
+            Based on: Rasooli et al. (2023) - Fairness in Educational Assessment, Ziegler et al. (2021) - Algorithmic Fairness in Education
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Gender Distribution Pie Chart
+const genderCtx = document.getElementById('genderChart');
+if (genderCtx) {
+    const genderData = {{ audit_results.demographic_analysis.gender | tojson }};
+    const genderLabels = Object.keys(genderData).map(g => g === '0' ? 'Female' : 'Male');
+    const genderCounts = Object.values(genderData).map(d => d.count);
+
+    new Chart(genderCtx, {
+        type: 'pie',
+        data: {
+            labels: genderLabels,
+            datasets: [{
+                data: genderCounts,
+                backgroundColor: [
+                    'rgba(236, 72, 153, 0.8)',
+                    'rgba(59, 130, 246, 0.8)'
+                ],
+                borderColor: [
+                    'rgb(236, 72, 153)',
+                    'rgb(59, 130, 246)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+// International vs Domestic Pie Chart
+const internationalCtx = document.getElementById('internationalChart');
+if (internationalCtx) {
+    const internationalData = {{ audit_results.demographic_analysis.is_international | tojson }};
+    const internationalLabels = Object.keys(internationalData).map(s => s === 'True' ? 'International' : 'Domestic');
+    const internationalCounts = Object.values(internationalData).map(d => d.count);
+
+    new Chart(internationalCtx, {
+        type: 'pie',
+        data: {
+            labels: internationalLabels,
+            datasets: [{
+                data: internationalCounts,
+                backgroundColor: [
+                    'rgba(34, 197, 94, 0.8)',
+                    'rgba(168, 85, 247, 0.8)'
+                ],
+                borderColor: [
+                    'rgb(34, 197, 94)',
+                    'rgb(168, 85, 247)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+// GPA Bands Bar Chart
+const gpaCtx = document.getElementById('gpaChart');
+if (gpaCtx) {
+    const gpaData = {{ audit_results.demographic_analysis.gpa_band | tojson }};
+    const gpaLabels = Object.keys(gpaData);
+    const gpaMatchRates = Object.values(gpaData).map(d => d.match_rate);
+
+    new Chart(gpaCtx, {
+        type: 'bar',
+        data: {
+            labels: gpaLabels,
+            datasets: [{
+                label: 'Match Rate',
+                data: gpaMatchRates,
+                backgroundColor: [
+                    'rgba(239, 68, 68, 0.8)',
+                    'rgba(251, 146, 60, 0.8)',
+                    'rgba(34, 197, 94, 0.8)'
+                ],
+                borderColor: [
+                    'rgb(239, 68, 68)',
+                    'rgb(251, 146, 60)',
+                    'rgb(34, 197, 94)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value.toFixed(2);
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+// Scholarship Holder Bar Chart
+const scholarshipHolderCtx = document.getElementById('scholarshipHolderChart');
+if (scholarshipHolderCtx) {
+    const scholarshipHolderData = {{ audit_results.demographic_analysis.current_scholarship_holder | tojson }};
+    const scholarshipHolderLabels = Object.keys(scholarshipHolderData).map(s => s === 'True' ? 'Has Scholarship' : 'No Scholarship');
+    const scholarshipHolderMatchRates = Object.values(scholarshipHolderData).map(d => d.match_rate);
+
+    new Chart(scholarshipHolderCtx, {
+        type: 'bar',
+        data: {
+            labels: scholarshipHolderLabels,
+            datasets: [{
+                label: 'Match Rate',
+                data: scholarshipHolderMatchRates,
+                backgroundColor: [
+                    'rgba(34, 197, 94, 0.8)',
+                    'rgba(239, 68, 68, 0.8)'
+                ],
+                borderColor: [
+                    'rgb(34, 197, 94)',
+                    'rgb(239, 68, 68)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value.toFixed(2);
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+</script>
+{% endblock %}

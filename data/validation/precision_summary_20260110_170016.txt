@@ -1,0 +1,24 @@
+SCHOLARSHIP MATCHING DSS - PRECISION VALIDATION SUMMARY
+======================================================================
+
+Date: 2026-01-10T17:00:16.881603
+Test Students: 10
+Top-N Evaluated: 5
+
+Average Precision: 86.0%
+Total Correct: 26/28
+Target: ≥80%
+Status: ✅ ACHIEVED
+
+Per-Student Results:
+----------------------------------------------------------------------
+High GPA CS Female International: 100.0% (2/2)
+Mid GPA Business Male Local: 100.0% (4/4)
+Low GPA Engineering Male International: 0.0% (0/0)
+Very High GPA CS Female Local: 80.0% (4/5)
+Upper-Mid GPA CS Male International: 100.0% (2/2)
+Low GPA Business Female Local: 100.0% (3/3)
+High GPA Engineering Female International: 100.0% (2/2)
+Mid GPA Random Course Male Local: 100.0% (3/3)
+High GPA Business Male Local: 80.0% (4/5)
+Very High GPA CS Female International Refugee: 100.0% (2/2)

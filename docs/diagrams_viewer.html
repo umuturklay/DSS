@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSS System Diagrams</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .diagram-container {
+            background: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .diagram-title {
+            color: #34495e;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .diagram-desc {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        .download-btn {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .download-btn:hover {
+            background: #2980b9;
+        }
+        .instructions {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📊 Scholarship DSS - System Diagrams</h1>
+
+    <div class="instructions">
+        <strong>💡 Nasıl Kullanılır:</strong>
+        <ol>
+            <li>Her diagramın üzerine <strong>sağ tıkla</strong> → <strong>"Save Image As..."</strong> → PNG kaydet</li>
+            <li>Veya screenshot al (Cmd+Shift+4)</li>
+            <li>Raporda kullan!</li>
+        </ol>
+    </div>
+
+    <!-- Diagram 1: Data Flow -->
+    <div class="diagram-container">
+        <div class="diagram-title">1. Data Flow Diagram</div>
+        <div class="diagram-desc">Complete flow from student input to final recommendations</div>
+        <div class="mermaid">
+flowchart TB
+    Start([Student Accesses System]) --> Input[Student Profile Input<br/>GPA, Course, Age, Nationality]
+    Input --> Firestore1[(Firestore<br/>Students Collection)]
+    Firestore1 --> MatchRequest[Match Request]
+    MatchRequest --> FetchScholarships[(Firestore<br/>Scholarships Collection)]
+    FetchScholarships --> Scholarships[10 Active Scholarships]
+    Scholarships --> RuleFilter[Rule-Based Filter<br/>Stage A: 8 Rules]
+    RuleFilter --> Eligible{All Rules<br/>Passed?}
+    Eligible -->|Yes| EligibleList[Eligible Scholarships]
+    Eligible -->|No| RejectedList[Rejected Scholarships]
+    EligibleList --> Ranker[AHP Weighted Ranker<br/>Stage B: 5 Factors]
+    Ranker --> Ranked[Ranked Scholarships]
+    Ranked --> Explainer[Explainability Module]
+    RejectedList --> Explainer
+    Explainer --> Results[Results Page]
+    Results --> Display[Display to Student]
+
+    style Start fill:#e1f5e1
+    style RuleFilter fill:#fff4e6
+    style Ranker fill:#e6f3ff
+    style Explainer fill:#f0e6ff
+    style Firestore1 fill:#ffe6e6
+    style FetchScholarships fill:#ffe6e6
+    style Results fill:#e1f5e1
+        </div>
+    </div>
+
+    <!-- Diagram 2: User Interaction -->
+    <div class="diagram-container">
+        <div class="diagram-title">2. User Interaction Flow</div>
+        <div class="diagram-desc">Sequence diagram showing HTMX-based interactions</div>
+        <div class="mermaid">
+sequenceDiagram
+    actor Student
+    participant Browser
+    participant Flask
+    participant Firestore
+    participant RuleFilter
+    participant Ranker
+
+    Student->>Browser: Visit /match
+    Browser->>Flask: GET /match/
+    Flask->>Firestore: Fetch students
+    Firestore-->>Flask: 500 students
+    Flask-->>Browser: Render dropdown
+
+    Student->>Browser: Select profile & submit
+    Browser->>Flask: POST /match/api
+    Flask->>Firestore: Get student & scholarships
+    Firestore-->>Flask: Data
+    Flask->>RuleFilter: Apply 8 rules
+    RuleFilter-->>Flask: Eligible list
+    Flask->>Ranker: Rank by AHP
+    Ranker-->>Flask: Ranked results
+    Flask-->>Browser: HTML partial
+    Browser-->>Student: Display results
+        </div>
+    </div>
+
+    <!-- Diagram 3: Decision Logic -->
+    <div class="diagram-container">
+        <div class="diagram-title">3. Decision Logic Architecture</div>
+        <div class="diagram-desc">3-stage DSS pipeline with rules and scoring</div>
+        <div class="mermaid">
+graph TB
+    subgraph Input
+        Student[Student Profile]
+        Scholarships[10 Scholarships]
+    end
+
+    subgraph Stage_A[Stage A: Rule Filter]
+        Filter[8 Hard Constraints<br/>━━━━━━━━━━<br/>GPA, Course, Nationality<br/>Deadline, Age, International<br/>Gender, Citizenship]
+    end
+
+    subgraph Stage_B[Stage B: AHP Ranker]
+        Rank[5 Weighted Factors<br/>━━━━━━━━━━<br/>GPA Buffer: 25%<br/>Keywords: 25%<br/>Competition: 20%<br/>Deadline: 15%<br/>Docs: 15%]
+    end
+
+    subgraph Stage_C[Stage C: Explainer]
+        Explain[Transparency<br/>━━━━━━━━━━<br/>Met Criteria<br/>Score Breakdown<br/>Recommendations]
+    end
+
+    Student --> Filter
+    Scholarships --> Filter
+    Filter --> Eligible{Pass?}
+    Eligible -->|Yes| Rank
+    Eligible -->|No| Explain
+    Rank --> Explain
+    Explain --> Output[Results]
+
+    style Filter fill:#fff4e6
+    style Rank fill:#e6f3ff
+    style Explain fill:#f0e6ff
+        </div>
+    </div>
+
+    <!-- Diagram 4: System Architecture -->
+    <div class="diagram-container">
+        <div class="diagram-title">4. System Architecture Overview</div>
+        <div class="diagram-desc">Complete tech stack and components</div>
+        <div class="mermaid">
+graph TB
+    subgraph Client
+        Browser[Browser<br/>TailwindCSS + HTMX]
+        Charts[Chart.js]
+    end
+
+    subgraph Flask_App[Flask Application]
+        Match[Match Blueprint]
+        Explain_BP[Explain Blueprint]
+        Audit[Audit Blueprint]
+        RuleFilter[RuleFilter Service]
+        Ranker[Ranker Service]
+        Explainer_Svc[Explainer Service]
+        Fairness[Fairness Auditor]
+    end
+
+    subgraph Firebase
+        Firestore[(Firestore DB)]
+    end
+
+    Browser --> Match
+    Browser --> Explain_BP
+    Browser --> Audit
+
+    Match --> RuleFilter
+    Match --> Ranker
+    Match --> Explainer_Svc
+
+    Audit --> Fairness
+
+    Match --> Firestore
+    Explain_BP --> Firestore
+    Audit --> Firestore
+
+    Match --> Browser
+
+    style Browser fill:#e1f5e1
+    style Firestore fill:#ffe6e6
+    style RuleFilter fill:#fff4e6
+    style Ranker fill:#e6f3ff
+        </div>
+    </div>
+
+    <!-- Diagram 5: Fairness Audit -->
+    <div class="diagram-container">
+        <div class="diagram-title">5. Fairness Audit Process Flow</div>
+        <div class="diagram-desc">Bias detection across demographic groups</div>
+        <div class="mermaid">
+flowchart TD
+    Start([Audit Triggered]) --> Fetch[Fetch All Students<br/>& Run Matching]
+    Fetch --> Segment[Segment by Demographics]
+    Segment --> Groups[4 Groups:<br/>Gender, Nationality<br/>GPA Band, Scholarship Status]
+    Groups --> CalcRate[Calculate Match Rates<br/>per Group]
+    CalcRate --> CheckGap{Gap > 0.15<br/>threshold?}
+    CheckGap -->|Yes| Alert[🚨 BIAS ALERT]
+    CheckGap -->|No| NoAlert[✅ Fair]
+    Alert --> Dashboard[Fairness Dashboard<br/>with Charts]
+    NoAlert --> Dashboard
+    Dashboard --> End([Admin Reviews])
+
+    style Start fill:#e1f5e1
+    style Alert fill:#ffcccc
+    style NoAlert fill:#ccffcc
+    style Dashboard fill:#e6f3ff
+    style End fill:#e1f5e1
+        </div>
+    </div>
+
+    <!-- Diagram 6: Database Schema -->
+    <div class="diagram-container">
+        <div class="diagram-title">6. Database Schema (Firestore)</div>
+        <div class="diagram-desc">Collections and document structure</div>
+        <div class="mermaid">
+erDiagram
+    STUDENTS {
+        string student_id PK
+        float gpa
+        int course
+        int gender
+        int age
+        boolean is_international
+        int nationality
+        array keywords
+    }
+
+    SCHOLARSHIPS {
+        string id PK
+        string name
+        float amount
+        float min_gpa
+        array eligible_courses
+        datetime deadline
+        float competitiveness
+    }
+
+    STUDENTS ||--o{ MATCH_RESULTS : "matches"
+    SCHOLARSHIPS ||--o{ MATCH_RESULTS : "matched_to"
+
+    MATCH_RESULTS {
+        string student_id FK
+        string scholarship_id FK
+        boolean matched
+        float score
+        int ranking
+    }
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

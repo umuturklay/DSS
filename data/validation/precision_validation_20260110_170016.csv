@@ -1,0 +1,11 @@
+student_id,student_name,precision,correct,total,predicted,expected
+TEST001,High GPA CS Female International,100.0%,2,2,DAAD Master's Scholarship; TURKIYE Scholarship,DAAD Master's Scholarship; Women in STEM Scholarship; UE Excellence Scholarship; Erasmus+ Mobility Grant; TURKIYE Scholarship
+TEST002,Mid GPA Business Male Local,100.0%,4,4,Business & Economics Grant; Need-Based Financial Aid; Erasmus+ Mobility Grant; Sports Excellence Scholarship,Business & Economics Grant; Erasmus+ Mobility Grant; Need-Based Financial Aid; Sports Excellence Scholarship
+TEST003,Low GPA Engineering Male International,0.0%,0,0,,Need-Based Financial Aid; Sports Excellence Scholarship
+TEST004,Very High GPA CS Female Local,80.0%,4,5,Need-Based Financial Aid; Erasmus+ Mobility Grant; Sports Excellence Scholarship; Women in STEM Scholarship; Local Merit Scholarship,UE Excellence Scholarship; Women in STEM Scholarship; Local Merit Scholarship; Erasmus+ Mobility Grant; Need-Based Financial Aid
+TEST005,Upper-Mid GPA CS Male International,100.0%,2,2,DAAD Master's Scholarship; TURKIYE Scholarship,DAAD Master's Scholarship; TURKIYE Scholarship; Erasmus+ Mobility Grant; Need-Based Financial Aid
+TEST006,Low GPA Business Female Local,100.0%,3,3,Need-Based Financial Aid; Erasmus+ Mobility Grant; Sports Excellence Scholarship,Erasmus+ Mobility Grant; Need-Based Financial Aid; Sports Excellence Scholarship
+TEST007,High GPA Engineering Female International,100.0%,2,2,DAAD Master's Scholarship; TURKIYE Scholarship,DAAD Master's Scholarship; Women in STEM Scholarship; TURKIYE Scholarship; Erasmus+ Mobility Grant; Need-Based Financial Aid
+TEST008,Mid GPA Random Course Male Local,100.0%,3,3,Need-Based Financial Aid; Erasmus+ Mobility Grant; Sports Excellence Scholarship,Erasmus+ Mobility Grant; Need-Based Financial Aid; Sports Excellence Scholarship
+TEST009,High GPA Business Male Local,80.0%,4,5,Business & Economics Grant; Need-Based Financial Aid; Erasmus+ Mobility Grant; Sports Excellence Scholarship; Local Merit Scholarship,Local Merit Scholarship; Business & Economics Grant; Erasmus+ Mobility Grant; Need-Based Financial Aid
+TEST010,Very High GPA CS Female International Refugee,100.0%,2,2,Refugee Support Scholarship; TURKIYE Scholarship,UE Excellence Scholarship; DAAD Master's Scholarship; Women in STEM Scholarship; TURKIYE Scholarship; Refugee Support Scholarship

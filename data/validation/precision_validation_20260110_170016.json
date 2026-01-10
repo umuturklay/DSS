@@ -1,0 +1,186 @@
+{
+  "results": [
+    {
+      "student_id": "TEST001",
+      "student_name": "High GPA CS Female International",
+      "predicted": [
+        "DAAD Master's Scholarship",
+        "TURKIYE Scholarship"
+      ],
+      "expected": [
+        "DAAD Master's Scholarship",
+        "Women in STEM Scholarship",
+        "UE Excellence Scholarship",
+        "Erasmus+ Mobility Grant",
+        "TURKIYE Scholarship"
+      ],
+      "precision": 1.0,
+      "correct": 2,
+      "total": 2
+    },
+    {
+      "student_id": "TEST002",
+      "student_name": "Mid GPA Business Male Local",
+      "predicted": [
+        "Business & Economics Grant",
+        "Need-Based Financial Aid",
+        "Erasmus+ Mobility Grant",
+        "Sports Excellence Scholarship"
+      ],
+      "expected": [
+        "Business & Economics Grant",
+        "Erasmus+ Mobility Grant",
+        "Need-Based Financial Aid",
+        "Sports Excellence Scholarship"
+      ],
+      "precision": 1.0,
+      "correct": 4,
+      "total": 4
+    },
+    {
+      "student_id": "TEST003",
+      "student_name": "Low GPA Engineering Male International",
+      "predicted": [],
+      "expected": [
+        "Need-Based Financial Aid",
+        "Sports Excellence Scholarship"
+      ],
+      "precision": 0.0,
+      "correct": 0,
+      "total": 0
+    },
+    {
+      "student_id": "TEST004",
+      "student_name": "Very High GPA CS Female Local",
+      "predicted": [
+        "Need-Based Financial Aid",
+        "Erasmus+ Mobility Grant",
+        "Sports Excellence Scholarship",
+        "Women in STEM Scholarship",
+        "Local Merit Scholarship"
+      ],
+      "expected": [
+        "UE Excellence Scholarship",
+        "Women in STEM Scholarship",
+        "Local Merit Scholarship",
+        "Erasmus+ Mobility Grant",
+        "Need-Based Financial Aid"
+      ],
+      "precision": 0.8,
+      "correct": 4,
+      "total": 5
+    },
+    {
+      "student_id": "TEST005",
+      "student_name": "Upper-Mid GPA CS Male International",
+      "predicted": [
+        "DAAD Master's Scholarship",
+        "TURKIYE Scholarship"
+      ],
+      "expected": [
+        "DAAD Master's Scholarship",
+        "TURKIYE Scholarship",
+        "Erasmus+ Mobility Grant",
+        "Need-Based Financial Aid"
+      ],
+      "precision": 1.0,
+      "correct": 2,
+      "total": 2
+    },
+    {
+      "student_id": "TEST006",
+      "student_name": "Low GPA Business Female Local",
+      "predicted": [
+        "Need-Based Financial Aid",
+        "Erasmus+ Mobility Grant",
+        "Sports Excellence Scholarship"
+      ],
+      "expected": [
+        "Erasmus+ Mobility Grant",
+        "Need-Based Financial Aid",
+        "Sports Excellence Scholarship"
+      ],
+      "precision": 1.0,
+      "correct": 3,
+      "total": 3
+    },
+    {
+      "student_id": "TEST007",
+      "student_name": "High GPA Engineering Female International",
+      "predicted": [
+        "DAAD Master's Scholarship",
+        "TURKIYE Scholarship"
+      ],
+      "expected": [
+        "DAAD Master's Scholarship",
+        "Women in STEM Scholarship",
+        "TURKIYE Scholarship",
+        "Erasmus+ Mobility Grant",
+        "Need-Based Financial Aid"
+      ],
+      "precision": 1.0,
+      "correct": 2,
+      "total": 2
+    },
+    {
+      "student_id": "TEST008",
+      "student_name": "Mid GPA Random Course Male Local",
+      "predicted": [
+        "Need-Based Financial Aid",
+        "Erasmus+ Mobility Grant",
+        "Sports Excellence Scholarship"
+      ],
+      "expected": [
+        "Erasmus+ Mobility Grant",
+        "Need-Based Financial Aid",
+        "Sports Excellence Scholarship"
+      ],
+      "precision": 1.0,
+      "correct": 3,
+      "total": 3
+    },
+    {
+      "student_id": "TEST009",
+      "student_name": "High GPA Business Male Local",
+      "predicted": [
+        "Business & Economics Grant",
+        "Need-Based Financial Aid",
+        "Erasmus+ Mobility Grant",
+        "Sports Excellence Scholarship",
+        "Local Merit Scholarship"
+      ],
+      "expected": [
+        "Local Merit Scholarship",
+        "Business & Economics Grant",
+        "Erasmus+ Mobility Grant",
+        "Need-Based Financial Aid"
+      ],
+      "precision": 0.8,
+      "correct": 4,
+      "total": 5
+    },
+    {
+      "student_id": "TEST010",
+      "student_name": "Very High GPA CS Female International Refugee",
+      "predicted": [
+        "Refugee Support Scholarship",
+        "TURKIYE Scholarship"
+      ],
+      "expected": [
+        "UE Excellence Scholarship",
+        "DAAD Master's Scholarship",
+        "Women in STEM Scholarship",
+        "TURKIYE Scholarship",
+        "Refugee Support Scholarship"
+      ],
+      "precision": 1.0,
+      "correct": 2,
+      "total": 2
+    }
+  ],
+  "avg_precision": 0.86,
+  "total_correct": 26,
+  "total_predicted": 28,
+  "target_met": true,
+  "timestamp": "2026-01-10T17:00:16.881603"
+}
