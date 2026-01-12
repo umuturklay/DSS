@@ -13,8 +13,6 @@ dist/
 
 # Firebase
 *firebase-adminsdk*.json
-firebase-credentials.json
-*.json.bak
 .env
 
 # IDE
